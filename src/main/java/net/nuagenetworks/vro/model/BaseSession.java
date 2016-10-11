@@ -69,13 +69,13 @@ public abstract class BaseSession<R extends RestRootObject> extends RestSession<
     @Override
     public void onEvent(JsonNode event) {
         // Debug
-        logger.info("Processing event: " + event.toString());
+        logger.debug("Processing event: " + event.toString());
 
         String eventType = event.get(EVENT_TYPE).asText();
         String entityType = event.get(ENTITY_TYPE).asText();
 
-        logger.info("eventType: " + eventType);
-        logger.info("entityType: " + entityType);
+        logger.debug("eventType: " + eventType);
+        logger.debug("entityType: " + entityType);
 
         ArrayNode entities = (ArrayNode) event.get(ENTITIES);
         for (int i = 0; i < entities.size(); i++) {
@@ -87,9 +87,9 @@ public abstract class BaseSession<R extends RestRootObject> extends RestSession<
             JsonNode entityParentIdNode = entity.get(ENTITY_PARENT_ID);
             String entityParentId = (entityParentTypeNode != null && !entityParentIdNode.isNull()) ? entityParentIdNode.asText() : getId();
 
-            logger.info("entityId: " + entityId);
-            logger.info("entityParentType: " + entityParentType);
-            logger.info("entityParentId: " + entityParentId);
+            logger.debug("entityId: " + entityId);
+            logger.debug("entityParentType: " + entityParentType);
+            logger.debug("entityParentId: " + entityParentId);
 
             if (eventType.equals(EVENT_TYPE_CREATE)) {
                 onEntityCreated(entityType, entityId, entityParentType, entityParentId);
