@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -140,8 +141,19 @@ public abstract class BaseSessionManager<T extends BaseSession<?>> {
                 if (apiUrl == null) {
                     break;
                 }
-                String username = props.getProperty("Session." + i + ".username");
-                String password = props.getProperty("Session." + i + ".password");
+                String username;
+                String password;
+                String encodedAuth = props.getProperty("Session." + i + ".auth");
+                if (encodedAuth != null) {
+                   byte[] decodedAuthBytes = Base64.decodeBase64(encodedAuth);
+                   String decodedAuth = new String(decodedAuthBytes);
+                   String[] decodedAuthParts = decodedAuth.split(":");
+                   username = decodedAuthParts[0];
+                   password = decodedAuthParts[1];
+                } else {
+                    username = props.getProperty("Session." + i + ".username");
+                    password = props.getProperty("Session." + i + ".password");
+                }
                 String enterprise = props.getProperty("Session." + i + ".enterprise");
                 String notificationsEnabledStr = props.getProperty("Session." + i + ".notificationsEnabled");
                 boolean notificationsEnabled = (notificationsEnabledStr != null) ? Boolean.valueOf(notificationsEnabledStr) : true;
@@ -181,8 +193,9 @@ public abstract class BaseSessionManager<T extends BaseSession<?>> {
             Properties props = new Properties();
             for (T session : sessions) {
                 props.setProperty("Session." + sessionCount + ".apiUrl", session.getApiUrl());
-                props.setProperty("Session." + sessionCount + ".username", session.getUsername());
-                props.setProperty("Session." + sessionCount + ".password", session.getPassword());
+                String decodedAuth = session.getUsername() + ":" + session.getPassword();
+                String encodedAuth = Base64.encodeBase64String(decodedAuth.getBytes());
+                props.setProperty("Session." + sessionCount + ".auth", encodedAuth);
                 props.setProperty("Session." + sessionCount + ".enterprise", session.getEnterprise());
                 props.setProperty("Session." + sessionCount + ".notificationsEnabled", Boolean.toString(session.getNotificationsEnabled()));
                 sessionCount++;
