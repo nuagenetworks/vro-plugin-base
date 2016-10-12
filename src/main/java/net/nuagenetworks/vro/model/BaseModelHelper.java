@@ -50,7 +50,7 @@ public class BaseModelHelper {
     }
 
     protected static <T extends BaseFetcher<? extends BaseObjectExtensions>> T addFetcherObjects(T fetcher, String objType) {
-        logger.info("Fetchers objects to add: " + fetcher.size());
+        logger.debug("Fetchers objects to add: " + fetcher.size());
         for (BaseObjectExtensions obj : fetcher) {
             addObject(objType, obj);
         }
@@ -70,14 +70,14 @@ public class BaseModelHelper {
 
         objTypeCache.put(objId, obj);
 
-        logger.info("Added object to cache: " + objType + " " + objId + " " + obj);
+        logger.debug("Added object to cache: " + objType + " " + objId + " " + obj);
     }
 
     private static Object getObjectFromCache(String objType, String objId) {
         Cache<String, Object> objTypeCache = cache.get(objType);
         if (objTypeCache != null) {
             Object obj = objTypeCache.getIfPresent(objId);
-            logger.info("Retrieved object from cache: " + objType + " " + objId + " " + obj);
+            logger.debug("Retrieved object from cache: " + objType + " " + objId + " " + obj);
             return obj;
         }
 

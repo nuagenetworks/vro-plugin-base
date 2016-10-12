@@ -47,12 +47,12 @@ public abstract class BaseSessionManager<T extends BaseSession<?>> {
     protected abstract T createSession(String username, String password, String enterprise, String apiUrl, String certificate);
 
     public void addFactory(BasePluginFactory factory) {
-        logger.info("Adding factory: " + factory);
+        logger.debug("Adding factory: " + factory);
         factories.add(factory);
     }
 
     public void removeFactory(BasePluginFactory factory) {
-        logger.info("Removing factory: " + factory);
+        logger.debug("Removing factory: " + factory);
         factories.remove(factory);
     }
 
@@ -99,21 +99,21 @@ public abstract class BaseSessionManager<T extends BaseSession<?>> {
 
     public void notifyElementInvalidate(String type, String id) {
         for (BasePluginFactory factory : new ArrayList<BasePluginFactory>(factories)) {
-            logger.info("Invalidating - type: " + type + ", id: " + id + " to factory: " + factory);
+            logger.debug("Invalidating - type: " + type + ", id: " + id + " to factory: " + factory);
             factory.getPluginNotificationHandler().notifyElementInvalidate(type, id);
         }
     }
 
     public void notifyElementDeleted(String type, String id) {
         for (BasePluginFactory factory : new ArrayList<BasePluginFactory>(factories)) {
-            logger.info("Deleting - type: " + type + ", id: " + id + " to factory: " + factory);
+            logger.debug("Deleting - type: " + type + ", id: " + id + " to factory: " + factory);
             factory.getPluginNotificationHandler().notifyElementDeleted(type, id);
         }
     }
 
     public void notifyElementUpdated(String type, String id) {
         for (BasePluginFactory factory : new ArrayList<BasePluginFactory>(factories)) {
-            logger.info("Updating - type: " + type + ", id: " + id + " to factory: " + factory);
+            logger.debug("Updating - type: " + type + ", id: " + id + " to factory: " + factory);
             factory.getPluginNotificationHandler().notifyElementUpdated(type, id);
         }
     }
@@ -161,7 +161,7 @@ public abstract class BaseSessionManager<T extends BaseSession<?>> {
                 T session = createSession(username, password, enterprise, apiUrl, null);
                 session.setNotificationsEnabled(notificationsEnabled);
                 session.start();
-                logger.info("Adding session: " + session.getId());
+                logger.debug("Adding session: " + session.getId());
                 sessions.add(session);
             }
 

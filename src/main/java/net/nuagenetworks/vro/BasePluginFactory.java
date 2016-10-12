@@ -37,7 +37,7 @@ public abstract class BasePluginFactory implements IPluginFactory {
     @Override
     public Object find(String type, String id) {
         // Debug
-        logger.info("find() --> type: " + type + ", " + id);
+        logger.debug("find() --> type: " + type + ", " + id);
 
         if (StringUtils.isEmpty(type) || StringUtils.isEmpty(id))
             return null;
@@ -53,7 +53,7 @@ public abstract class BasePluginFactory implements IPluginFactory {
     @Override
     public List<?> findRelation(String type, String id, String relationName) {
         // Debug
-        logger.info("findRelation() --> type: " + type + ", id: " + id + ", relationName: " + relationName);
+        logger.debug("findRelation() --> type: " + type + ", id: " + id + ", relationName: " + relationName);
 
         try {
             return findRelationImpl(type, id, relationName);
@@ -66,7 +66,7 @@ public abstract class BasePluginFactory implements IPluginFactory {
     @Override
     public QueryResult findAll(String type, String query) {
         // Debug
-        logger.info("findAll() --> type: " + type + ", query: " + query);
+        logger.debug("findAll() --> type: " + type + ", query: " + query);
 
         try {
             return findAllImpl(type, query);
