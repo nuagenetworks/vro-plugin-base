@@ -6,6 +6,10 @@
 	<artifactId>vro-plugin-base</artifactId>
 	<version>1.0.1</version>
 
+   <properties>
+      <vco.version>6.0.3</vco.version>
+   </properties>
+
 	<repositories>
 		<repository>
 			<id>added-by-archetype</id>
@@ -41,12 +45,12 @@
 		<dependency>
 			<groupId>com.vmware.o11n</groupId>
 			<artifactId>o11n-sdkapi</artifactId>
-			<version>6.0.3</version>
+			<version>${vco.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.vmware.o11n</groupId>
 			<artifactId>o11n-plugin-tools</artifactId>
-			<version>6.0.3</version>
+			<version>${vco.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.nuagenetworks</groupId>
