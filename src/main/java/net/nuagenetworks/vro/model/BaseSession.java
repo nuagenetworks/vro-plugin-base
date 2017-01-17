@@ -36,6 +36,7 @@ import net.nuagenetworks.bambou.RestException;
 import net.nuagenetworks.bambou.RestFetcher;
 import net.nuagenetworks.bambou.RestPushCenter;
 import net.nuagenetworks.bambou.RestPushCenterListener;
+import net.nuagenetworks.bambou.RestPushCenterType;
 import net.nuagenetworks.bambou.RestRootObject;
 import net.nuagenetworks.bambou.RestSession;
 import net.nuagenetworks.vro.model.fetchers.BaseFetcher;
@@ -55,6 +56,7 @@ public abstract class BaseSession<R extends RestRootObject> extends RestSession<
 
     private RestPushCenter pushCenter;
     private boolean notificationsEnabled;
+    private boolean useJmsForNotifications;
 
     public BaseSession(Class<R> restRootObjClass) {
         super(restRootObjClass);
@@ -72,7 +74,15 @@ public abstract class BaseSession<R extends RestRootObject> extends RestSession<
     protected void setNotificationsEnabled(boolean notificationsEnabled) {
         this.notificationsEnabled = notificationsEnabled;
     }
+
+    protected boolean getUseJmsForNotifications() {
+        return useJmsForNotifications;
+    }
     
+    protected void setUseJmsForNotifications(boolean useJmsForNotifications) {
+        this.useJmsForNotifications = useJmsForNotifications;
+    }
+
     @Override
     public void start() throws RestException {
         super.start();
@@ -81,7 +91,7 @@ public abstract class BaseSession<R extends RestRootObject> extends RestSession<
 
         if (notificationsEnabled) {
             // Start listening for events from VSD
-            pushCenter = getPushCenter();
+            pushCenter = createPushCenter((useJmsForNotifications? RestPushCenterType.JMS : RestPushCenterType.LONG_POLL));
             pushCenter.addListener(this);
             pushCenter.start();
         }
