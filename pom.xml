@@ -4,11 +4,44 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.nuagenetworks</groupId>
 	<artifactId>vro-plugin-base</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
-   <properties>
-      <vco.version>6.0.3</vco.version>
-   </properties>
+	<properties>
+		<project.scm.id>github</project.scm.id>
+		<vco.version>6.0.3</vco.version>
+	</properties>
+
+	<licenses>
+		<license>
+			<name>Alcatel-Lucent Inc. License</name>
+			<url>http://github.com/nuagenetworks/vro-plugin-base/blob/master/LICENSE</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Nuage Networks</name>
+			<email>nuage-oss-support@alcatel-lucent.com</email>
+			<organization>Nuage Networks</organization>
+			<organizationUrl>http://www.nuagenetworks.net</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:https://github.com/nuagenetworks/vro-plugin-base.git</connection>
+		<developerConnection>scm:git:https://github.com/nuagenetworks/vro-plugin-base.git</developerConnection>
+		<url>https://github.com/nuagenetworks/vro-plugin-base.git</url>
+	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>ArtifactoryServer</id>
+			<name>ArtifactoryServer-releases</name>
+			<url>${distMgmtRepoUrl}</url>
+		</repository>
+	</distributionManagement>
 
 	<repositories>
 		<repository>
@@ -28,6 +61,18 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.4.2</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.scm</groupId>
+						<artifactId>maven-scm-provider-gitexe</artifactId>
+						<version>1.8.1</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
 		</plugins>
 	</build>
 
