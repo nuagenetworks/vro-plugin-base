@@ -72,7 +72,7 @@ public abstract class BaseSessionManager<T extends BaseSession<?>> {
 
     protected abstract T createSession(String username, String password, String enterprise, String apiUrl);
     
-    protected abstract T createSession(String username, String enterprise, String apiUrl, String[] certificateFilePairPaths);
+    protected abstract T createSession(String username, String enterprise, String apiUrl, String[] certificateContentPair);
 
     public void addFactory(BasePluginFactory factory) {
         logger.debug("Adding factory: " + factory);
