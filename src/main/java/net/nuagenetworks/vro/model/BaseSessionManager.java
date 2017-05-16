@@ -70,7 +70,9 @@ public abstract class BaseSessionManager<T extends BaseSession<?>> {
         }
     }
 
-    protected abstract T createSession(String username, String password, String enterprise, String apiUrl, String certificate);
+    protected abstract T createSession(String username, String password, String enterprise, String apiUrl);
+    
+    protected abstract T createSession(String username, String enterprise, String apiUrl, String[] certificateFilePairPaths);
 
     public void addFactory(BasePluginFactory factory) {
         logger.debug("Adding factory: " + factory);
@@ -184,7 +186,7 @@ public abstract class BaseSessionManager<T extends BaseSession<?>> {
                 String notificationsEnabledStr = props.getProperty("Session." + i + ".notificationsEnabled");
                 boolean notificationsEnabled = (notificationsEnabledStr != null) ? Boolean.valueOf(notificationsEnabledStr) : true;
 
-                T session = createSession(username, password, enterprise, apiUrl, null);
+                T session = createSession(username, password, enterprise, apiUrl);
                 session.setNotificationsEnabled(notificationsEnabled);
                 session.start();
                 logger.debug("Adding session: " + session.getId());
