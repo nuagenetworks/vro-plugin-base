@@ -41,7 +41,7 @@ import net.nuagenetworks.bambou.RestRootObject;
 import net.nuagenetworks.bambou.RestSession;
 import net.nuagenetworks.vro.model.fetchers.BaseFetcher;
 
-public abstract class BaseSession<R extends RestRootObject> extends RestSession<R>implements RestPushCenterListener {
+public abstract class BaseSession<R extends RestRootObject> extends RestSession<R> implements RestPushCenterListener {
     private final static String EVENT_TYPE = "type";
     private final static String ENTITY_TYPE = "entityType";
     private final static String ENTITIES = "entities";
