@@ -231,12 +231,18 @@ public abstract class BaseSessionManager<T extends BaseSession<?>> {
             Properties props = new Properties();
             for (T session : sessions) {
                 props.setProperty("Session." + sessionCount + ".apiUrl", session.getApiUrl());
-                String decodedAuth = session.getUsername() + ":" + session.getPassword();
-                String encodedAuth = Base64.encodeBase64String(decodedAuth.getBytes());
-                props.setProperty("Session." + sessionCount + ".auth", encodedAuth);
+                if (session.getPassword() != null) {
+                    String decodedAuth = session.getUsername() + ":" + session.getPassword();
+                    String encodedAuth = Base64.encodeBase64String(decodedAuth.getBytes());
+                    props.setProperty("Session." + sessionCount + ".auth", encodedAuth);
+                }
                 props.setProperty("Session." + sessionCount + ".enterprise", session.getEnterprise());
-                props.setProperty("Session." + sessionCount + ".certificate",  session.getCertificate());
-                props.setProperty("Session." + sessionCount + ".privateKey",  session.getPrivateKey());                
+                if (session.getCertificate() != null) {
+                    props.setProperty("Session." + sessionCount + ".certificate",  session.getCertificate());
+                }                
+                if (session.getPrivateKey() != null) {
+                    props.setProperty("Session." + sessionCount + ".privateKey",  session.getPrivateKey());
+                }                
                 props.setProperty("Session." + sessionCount + ".notificationsEnabled", Boolean.toString(session.getNotificationsEnabled()));
                 props.setProperty("Session." + sessionCount + ".useJmsForNotifications", Boolean.toString(session.getUseJmsForNotifications()));
                 sessionCount++;
