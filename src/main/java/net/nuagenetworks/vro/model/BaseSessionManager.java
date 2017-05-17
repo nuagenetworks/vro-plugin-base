@@ -72,7 +72,7 @@ public abstract class BaseSessionManager<T extends BaseSession<?>> {
 
     protected abstract T createSession(String username, String password, String enterprise, String apiUrl);
     
-    protected abstract T createSession(String username, String enterprise, String apiUrl, String[] certificateContentPair);
+    protected abstract T createSession(String username, String enterprise, String apiUrl, String certificateContent, String privateKeyContent);
 
     public void addFactory(BasePluginFactory factory) {
         logger.debug("Adding factory: " + factory);
@@ -183,17 +183,16 @@ public abstract class BaseSessionManager<T extends BaseSession<?>> {
                     password = props.getProperty("Session." + i + ".password");
                 }
                 String enterprise = props.getProperty("Session." + i + ".enterprise");
-                String certficate = props.getProperty("Session." + i + ".certificate");
-                String privateKey = props.getProperty("Session." + i + ".privateKey");
+                String certficateContent = props.getProperty("Session." + i + ".certificate");
+                String privateKeyContent = props.getProperty("Session." + i + ".privateKey");
                 String notificationsEnabledStr = props.getProperty("Session." + i + ".notificationsEnabled");
                 boolean notificationsEnabled = (notificationsEnabledStr != null) ? Boolean.valueOf(notificationsEnabledStr) : true;
                 String useJmsForNotificationsStr = props.getProperty("Session." + i + ".useJmsForNotifications");
                 boolean useJmsForNotifications = (useJmsForNotificationsStr != null) ? Boolean.valueOf(useJmsForNotificationsStr) : true;
 
                 T session = null;
-                if (certficate != null && privateKey != null) {
-                    String[] certificateContentPair = new String[] { certficate, privateKey };
-                    session = createSession(username, enterprise, apiUrl, certificateContentPair);
+                if (certficateContent != null && privateKeyContent != null) {
+                    session = createSession(username, enterprise, apiUrl, certficateContent, privateKeyContent);
                 } else {
                     session = createSession(username, password, enterprise, apiUrl);
                 } 
