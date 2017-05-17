@@ -70,7 +70,9 @@ public abstract class BaseSessionManager<T extends BaseSession<?>> {
         }
     }
 
-    protected abstract T createSession(String username, String password, String enterprise, String apiUrl, String certificate);
+    protected abstract T createSession(String username, String password, String enterprise, String apiUrl);
+    
+    protected abstract T createSession(String username, String enterprise, String apiUrl, String certificateContent, String privateKeyContent);
 
     public void addFactory(BasePluginFactory factory) {
         logger.debug("Adding factory: " + factory);
@@ -181,11 +183,21 @@ public abstract class BaseSessionManager<T extends BaseSession<?>> {
                     password = props.getProperty("Session." + i + ".password");
                 }
                 String enterprise = props.getProperty("Session." + i + ".enterprise");
+                String certficateContent = props.getProperty("Session." + i + ".certificate");
+                String privateKeyContent = props.getProperty("Session." + i + ".privateKey");
                 String notificationsEnabledStr = props.getProperty("Session." + i + ".notificationsEnabled");
                 boolean notificationsEnabled = (notificationsEnabledStr != null) ? Boolean.valueOf(notificationsEnabledStr) : true;
+                String useJmsForNotificationsStr = props.getProperty("Session." + i + ".useJmsForNotifications");
+                boolean useJmsForNotifications = (useJmsForNotificationsStr != null) ? Boolean.valueOf(useJmsForNotificationsStr) : true;
 
-                T session = createSession(username, password, enterprise, apiUrl, null);
+                T session = null;
+                if (certficateContent != null && privateKeyContent != null) {
+                    session = createSession(username, enterprise, apiUrl, certficateContent, privateKeyContent);
+                } else {
+                    session = createSession(username, password, enterprise, apiUrl);
+                } 
                 session.setNotificationsEnabled(notificationsEnabled);
+                session.setUseJmsForNotifications(useJmsForNotifications);
                 session.start();
                 logger.debug("Adding session: " + session.getId());
                 sessions.add(session);
@@ -219,11 +231,20 @@ public abstract class BaseSessionManager<T extends BaseSession<?>> {
             Properties props = new Properties();
             for (T session : sessions) {
                 props.setProperty("Session." + sessionCount + ".apiUrl", session.getApiUrl());
-                String decodedAuth = session.getUsername() + ":" + session.getPassword();
-                String encodedAuth = Base64.encodeBase64String(decodedAuth.getBytes());
-                props.setProperty("Session." + sessionCount + ".auth", encodedAuth);
+                if (session.getPassword() != null) {
+                    String decodedAuth = session.getUsername() + ":" + session.getPassword();
+                    String encodedAuth = Base64.encodeBase64String(decodedAuth.getBytes());
+                    props.setProperty("Session." + sessionCount + ".auth", encodedAuth);
+                }
                 props.setProperty("Session." + sessionCount + ".enterprise", session.getEnterprise());
+                if (session.getCertificate() != null) {
+                    props.setProperty("Session." + sessionCount + ".certificate",  session.getCertificate());
+                }                
+                if (session.getPrivateKey() != null) {
+                    props.setProperty("Session." + sessionCount + ".privateKey",  session.getPrivateKey());
+                }                
                 props.setProperty("Session." + sessionCount + ".notificationsEnabled", Boolean.toString(session.getNotificationsEnabled()));
+                props.setProperty("Session." + sessionCount + ".useJmsForNotifications", Boolean.toString(session.getUseJmsForNotifications()));
                 sessionCount++;
             }
             props.store(fos, "List of configured sessions");
