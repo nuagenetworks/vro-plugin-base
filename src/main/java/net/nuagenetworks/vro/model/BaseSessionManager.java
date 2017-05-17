@@ -183,11 +183,22 @@ public abstract class BaseSessionManager<T extends BaseSession<?>> {
                     password = props.getProperty("Session." + i + ".password");
                 }
                 String enterprise = props.getProperty("Session." + i + ".enterprise");
+                String certficate = props.getProperty("Session." + i + ".certificate");
+                String privateKey = props.getProperty("Session." + i + ".privateKey");
                 String notificationsEnabledStr = props.getProperty("Session." + i + ".notificationsEnabled");
                 boolean notificationsEnabled = (notificationsEnabledStr != null) ? Boolean.valueOf(notificationsEnabledStr) : true;
+                String useJmsForNotificationsStr = props.getProperty("Session." + i + ".useJmsForNotifications");
+                boolean useJmsForNotifications = (useJmsForNotificationsStr != null) ? Boolean.valueOf(useJmsForNotificationsStr) : true;
 
-                T session = createSession(username, password, enterprise, apiUrl);
+                T session = null;
+                if (certficate != null && privateKey != null) {
+                    String[] certificateContentPair = new String[] { certficate, privateKey };
+                    session = createSession(username, enterprise, apiUrl, certificateContentPair);
+                } else {
+                    session = createSession(username, password, enterprise, apiUrl);
+                } 
                 session.setNotificationsEnabled(notificationsEnabled);
+                session.setUseJmsForNotifications(useJmsForNotifications);
                 session.start();
                 logger.debug("Adding session: " + session.getId());
                 sessions.add(session);
@@ -225,7 +236,10 @@ public abstract class BaseSessionManager<T extends BaseSession<?>> {
                 String encodedAuth = Base64.encodeBase64String(decodedAuth.getBytes());
                 props.setProperty("Session." + sessionCount + ".auth", encodedAuth);
                 props.setProperty("Session." + sessionCount + ".enterprise", session.getEnterprise());
+                props.setProperty("Session." + sessionCount + ".certificate",  session.getCertificate());
+                props.setProperty("Session." + sessionCount + ".privateKey",  session.getPrivateKey());                
                 props.setProperty("Session." + sessionCount + ".notificationsEnabled", Boolean.toString(session.getNotificationsEnabled()));
+                props.setProperty("Session." + sessionCount + ".useJmsForNotifications", Boolean.toString(session.getUseJmsForNotifications()));
                 sessionCount++;
             }
             props.store(fos, "List of configured sessions");
