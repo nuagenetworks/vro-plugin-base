@@ -4,7 +4,7 @@ Base library for vRO plug-in generation using Monolithe.
 
 # Build
 
-The following library needs to be built prior to building the plug-in:
+The following library needs to be built prior to building this library:
 
 * [java-bambou](https://github.com/nuagenetworks/java-bambou)
 
