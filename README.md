@@ -1,8 +1,8 @@
-#vro-plugin-base
+# vro-plugin-base
 
 Base library for vRO plug-in generation using Monolithe.
 
-#build
+# Build
 
 The following library needs to be built prior to building the plug-in:
 
