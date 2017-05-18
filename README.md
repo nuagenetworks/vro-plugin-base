@@ -2,7 +2,7 @@
 
 Base library for vRO plug-in generation using Monolithe.
 
-# Build
+# build
 
 The following library needs to be built prior to building this library:
 
